@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:id="DO00000376">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title level="a" type="main">Franklin Circuit Court</title>
+      </titleStmt>
+      <publicationStmt>
+        <publisher>Kentucky Historical Society</publisher>
+        <pubPlace>Frankfort, Kentucky</pubPlace>
+        <availability>
+          <p>All research and writing of Civil War Governors of Kentucky Digital Documentary Edition annotations was
+            undertaken by project staff, volunteers, and interns. Each record contains citations to relevant primary and
+            secondary source material. All annotations are copyright Kentucky Historical Society, and should be
+            referenced as such in any published work.
+          </p>
+        </availability>
+      </publicationStmt>
+      <seriesStmt>
+        <title level="s" type="main">Civil War Governors of Kentucky Digital Documentary Edition</title>
+      </seriesStmt>
+      <sourceDesc>
+        <ab>Born Digital</ab>
+      </sourceDesc>
+    </fileDesc>
+
+    <profileDesc>
+      <textClass>
+        <keywords>
+          <term type="type">Organization</term>
+        </keywords>
+      </textClass>
+      <particDesc>
+        <org xml:id="O00000376">
+          <orgName>Franklin Circuit Court</orgName>
+          <event type="begun" when="unknown">unknown</event>
+          <event type="ended" when="unknown">unknown</event>
+        </org>
+      </particDesc>
+    </profileDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <p>Located in the 8th Judicial District of the Commonwealth of Kentucky. Judge(s): Elijah F. Nuttall and George C.
+        Drane. Commonwealth’s Attorney(s): P. U. Major and John L. Scott. Clerk(s): Philip Swigert and Walter R.
+        Franklin.
+      </p>
+
+    </body>
+    <back>
+      <ab>
+        <bibl>
+          <p>“Annual Report of the Auditor of Public Accounts of the State of Kentucky, for the Fiscal Year Ending
+            October 10, 1861,” in <em>1862 Kentucky Documents, Legislative Document No. 1</em>. (Frankfort, Ky.: Jno. B.
+            Major, State Printer, 1862), 303-308; “Annual Report of the Auditor of Public Accounts of the State of
+            Kentucky, for the Fiscal Year Ending October 10, 1862,” in <em>1863 Kentucky Documents, Legislative Document
+              No. 24</em>. (Frankfort, Ky.: Wm. E. Hughes, State Printer, 1863), 298-306; “Annual Report of the Auditor
+            of Public Accounts of the State of Kentucky, for the Fiscal Year Ending October 10, 1863,” in <em>1864
+              Kentucky Documents, Legislative Document No. 10</em>. (Frankfort, Ky.: Wm. E. Hughes, State Printer,
+            1864), 301-306; “Annual Report of the Auditor of Public Accounts of the State of Kentucky, for the Fiscal
+            Year Ending October 10, 1864,” in <em>1865 Kentucky Documents, Legislative Document No. 1</em>. (Frankfort,
+            Ky.: George D. Prentice, State Printer, 1865), 9-12; “Annual Report of the Auditor of Public Accounts of the
+            State of Kentucky, for the Fiscal Year Ending October 10, 1865,” in <em>1865/66 Kentucky Documents,
+              Legislative Document No. 1</em>. (Frankfort, Ky.: George D. Prentice, State Printer, 1866), 9-12; “Annual
+            Report of the Auditor of Public Accounts of the State of Kentucky, for the Fiscal Year Ending October 10,
+            1866,” in <em>1866 Kentucky Documents, Legislative Document No. 1</em>. (Frankfort, Ky.: John H. Harney,
+            Public Printer, 1866), 347-350.
+          </p>
+        </bibl>
+      </ab>
+    </back>
+  </text>
+</TEI>

@@ -48,6 +48,10 @@ class Omelette::Importer
     return @settings
   end
 
+  def to_item_type(item_type_name, aLambda = nil, &block)
+
+  end
+
   def to_element(element_name, element_set_name, aLambda = nil, &block)
     @import_steps << ToElementStep.new(element_name, element_set_name, elements_map, aLambda, block, Omelette::Util.extract_caller_location(caller.first))
   end
@@ -97,11 +101,8 @@ class Omelette::Importer
     elements.compact! unless settings[ALLOW_NIL_VALUES]
     return if elements.empty? and not (settings[ALLOW_EMPTY_FIELDS])
 
-    element_name = context.import_step.element_name
-    context.output_hash[element_name] ||= []
-
-    existing_element = context.output_hash[element_name].concat element
-    existing_element.uniq! unless settings[ALLOW_DUPLICATE_VALUES]
+    context.add_elements elements
+    #existing_element.uniq! unless settings[ALLOW_DUPLICATE_VALUES]
 
   rescue NameError => ex
     msg = 'Tried to call add_element_to_context with a non-to_element step'
@@ -120,7 +121,7 @@ class Omelette::Importer
     processing_threads = settings['processing_thread_pool'].to_i
     thread_pool = Omelette::ThreadPool.new processing_threads
 
-    logger.info "   Indexer with #{processing_threads} processing threads, reader: #{reader.class.name} and writer: #{writer.class.name}"
+    logger.info "   Importer with #{processing_threads} processing threads, reader: #{reader.class.name} and writer: #{writer.class.name}"
     log_batch_size = settings['log.batch_size'] && settings['log.batch_size'].to_i
 
     reader.each do |item, item_id; position|
@@ -160,7 +161,6 @@ class Omelette::Importer
 
     thread_pool.raise_collected_exception!
 
-
     writer.close if writer.respond_to?(:close)
 
     @after_processing_steps.each do |step|
@@ -198,7 +198,7 @@ class Omelette::Importer
   # Instantiate a Omelette Reader, using class set
   # in #reader_class, initialized with io_stream passed in
   def reader!(ids)
-    return reader_class.new(ids, settings.merge('logger' => logger))
+    return reader_class.new(settings.merge('logger' => logger), ids)
   end
 
   # Instantiate a Writer, suing class set in #writer_class

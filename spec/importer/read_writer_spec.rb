@@ -28,7 +28,7 @@ describe Omelette::Importer do
   before(:each) do
     @importer = Omelette::Importer.new('processing_thread_pool' => nil)
     @importer.writer_class = memory_writer_class
-    @files = [ support_file_path('person_tei.xml') ]
+    @files = [ file_fixture('person_tei.xml').to_s, file_fixture('organization_tei.xml').to_s ]
     @importer.settings['omeka_api_root'] = 'www.example.com'
     @importer.settings['reader_class_name'] = 'Omelette::XmlReader'
   end
@@ -36,10 +36,17 @@ describe Omelette::Importer do
   describe '#process' do
     it 'works' do
       @importer.instance_eval do
-        to_element 'Birth Date', 'Item Type Metadata', Omelette::Macros::Xpath.extract_xpath('//tei:particDesc/tei:person/tei:birth/@when')
+        to_element 'Birth Date', 'Item Type Metadata', extract_xpath('//tei:particDesc/tei:person/tei:birth/@when')
       end
       result = @importer.process @files
       expect(result).to be true
+
+      writer_settings = memory_writer_class.class_variable_get('@@last_writer_settings')
+      expect(writer_settings['memory_writer.added']).not_to be nil
+      expect(writer_settings['memory_writer.added'].length).to be 2
+      expect(writer_settings['memory_writer.added'].first.output_hash[:element_texts][0][:text]).to eq '1823'
+      expect(writer_settings['logger']).not_to be nil
+      expect(writer_settings['memory_writer.closed']).to be true
     end
   end
 end

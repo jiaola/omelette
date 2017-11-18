@@ -3,7 +3,7 @@ module Omelette::Macros
     def extract_xpath(xpath, options={})
       options[:html] = false unless options.has_key? :html
       lambda do |item, elements, context|
-        nodes = item.xpath xpath
+        nodes = item.xpath xpath, tei: 'http://www.tei-c.org/ns/1.0'
         nodes.map { |node|
           elements << { html: options[:html], element: { id: context.import_step.element_id }, text: node.to_s.strip }
         }

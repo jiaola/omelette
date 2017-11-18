@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 class Omelette::XmlReader
   attr_reader :settings, :folder
 
@@ -12,13 +14,11 @@ class Omelette::XmlReader
 
   def each
     return enum_for(:each) unless block_given?
-
-
-      @file_paths.each do |file|
+    @file_paths.each do |file|
       begin
-      xml_doc = Nokogiri::XML(File.open(file))
-      xml_doc.remove_namespaces! if settings['remove_xml_namespaces'].to_s == 'true'
-      yield xml_doc, File.basename(file)
+        xml_doc = Nokogiri::XML(File.open(file))
+        xml_doc.remove_namespaces! if settings['remove_xml_namespaces'].to_s == 'true'
+        yield xml_doc, File.basename(file)
       rescue => ex
         self.logger.error "Problem processing file #{file}: #{ex.message}"
       end

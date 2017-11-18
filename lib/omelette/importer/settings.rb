@@ -95,11 +95,7 @@ class Omelette::Importer
 
     protected
     def self.default_processing_thread_pool
-      if ['jruby', 'rbx'].include? ENV['RUBY_ENGINE']
-        [1, Concurrent.processor_count - 1].max
-      else
-        1
-      end
+      1
     end
 
   end

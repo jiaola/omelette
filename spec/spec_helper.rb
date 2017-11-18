@@ -5,8 +5,10 @@ require 'webmock/rspec'
 require 'omelette/importer/settings'
 Omelette::Importer::Settings.defaults['log.level'] = 'gt.fatal'
 
-def support_file_path(relative_path)
-  return File.expand_path(File.join('spec_support', relative_path), File.dirname(__FILE__))
+include Omelette::Macros::Xpath
+
+def file_fixture(relative_path)
+  return Pathname.new(File.expand_path(File.join('fixtures', relative_path), File.dirname(__FILE__)))
 end
 
 RSpec.configure do |config|
@@ -23,8 +25,8 @@ RSpec.configure do |config|
   config.expose_dsl_globally = true
 
   config.before :all do
-    @elements_data = IO.read(support_file_path 'elements.json')
-    @element_sets_data = IO.read(support_file_path 'element_sets.json')
+    @elements_data = file_fixture('elements.json').read
+    @element_sets_data = file_fixture('element_sets.json').read
   end
 
   # WebMock reset after each example. Therefore we can't use it in before :all.
