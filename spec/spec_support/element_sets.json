@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "url": "http:\/\/localhost\/api\/element_sets\/1",
+    "name": "Dublin Core",
+    "description": "The Dublin Core metadata element set is common to all Omeka records, including items, files, and collections. For more information see, http:\/\/dublincore.org\/documents\/dces\/.",
+    "record_type": null,
+    "elements": {
+      "count": 15,
+      "url": "http:\/\/localhost\/api\/elements?element_set=1",
+      "resource": "elements"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 3,
+    "url": "http:\/\/localhost\/api\/element_sets\/3",
+    "name": "Item Type Metadata",
+    "description": "The item type metadata element set, consisting of all item type elements bundled with Omeka and all item type elements created by an administrator.",
+    "record_type": "Item",
+    "elements": {
+      "count": 45,
+      "url": "http:\/\/localhost\/api\/elements?element_set=3",
+      "resource": "elements"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 4,
+    "url": "http:\/\/localhost\/api\/element_sets\/4",
+    "name": "CWG Documents",
+    "description": "Schema for TEI documents in the digital documentary edition, Civil War Governors of Kentucky.",
+    "record_type": "Item",
+    "elements": {
+      "count": 16,
+      "url": "http:\/\/localhost\/api\/elements?element_set=4",
+      "resource": "elements"
+    },
+    "extended_resources": []
+  }
+]

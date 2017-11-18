@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:id="DN00000247">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title level="a" type="main">Charles Savage</title>
+      </titleStmt>
+      <seriesStmt>
+        <title level="s" type="main">Civil War Governors of Kentucky Digital Documentary Edition</title>
+      </seriesStmt>
+      <sourceDesc>
+        <ab>Born Digital</ab>
+      </sourceDesc>
+    </fileDesc>
+
+    <profileDesc>
+      <textClass>
+        <keywords>
+          <term type="type">Person</term>
+        </keywords>
+      </textClass>
+      <particDesc>
+        <person xml:id="N00000247">
+          <persName>
+            Charles Savage
+            (Marion Co Saddler)
+          </persName>
+          <birth when="1823"></birth>
+          <death when="1883"></death>
+          <trait type="race" subtype="White"/>
+          <trait type="gender" subtype="M"/>
+        </person>
+      </particDesc>
+    </profileDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <p>Marion County, Kentucky, master saddler. Kentucky native. Married to Ann M. Savage. Father of William Savage,
+        Mary M. Savage, and Charles F. Savage.
+      </p>
+
+    </body>
+    <back>
+      <ab>
+        <bibl>
+          <p>
+            <em>Eighth Manuscript Census of the United States</em>
+            (1860), Population Schedules, Kentucky, Marion County, Lebanon District 1, p. 44. Marion County [Kentucky]
+            Court, Probate Records, 1863-1902, Roll 598712: Administrators Bonds, Vol. 3, 1879-91, p. 101.
+          </p>
+        </bibl>
+      </ab>
+    </back>
+  </text>
+</TEI>
