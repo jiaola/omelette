@@ -18,7 +18,7 @@ class Omelette::XmlReader
       begin
         xml_doc = Nokogiri::XML(File.open(file))
         xml_doc.remove_namespaces! if settings['remove_xml_namespaces'].to_s == 'true'
-        yield xml_doc, File.basename(file)
+        yield xml_doc, file
       rescue => ex
         self.logger.error "Problem processing file #{file}: #{ex.message}"
       end

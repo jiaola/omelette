@@ -5,6 +5,7 @@ require 'omelette/importer/errors'
 require 'omelette/importer/steps'
 require 'omelette/thread_pool'
 require 'omelette/macros/xpath'
+require 'mysql2'
 
 class Omelette::Importer
   include Omelette::Macros::Xpath
@@ -20,8 +21,28 @@ class Omelette::Importer
     @logger = create_logger
   end
 
-  def elements_map
-    @elements_map ||= Omelette::Util.build_elements_map @settings['omeka_api_root']
+  def name_id_maps
+    if @name_id_maps.nil?
+      @name_id_maps = {}
+      @name_id_maps[:elements] = Omelette::Util.build_elements_map @settings['omeka_api_root']
+      @name_id_maps[:item_types] = Omelette::Util.build_item_types_map @settings['omeka_api_root']
+      # TODO: Make this a generic db client, instead of just for MySQL
+      db_client = create_db_client
+      @name_id_maps[:collections] = Omelette::Util.build_collections_map db_client
+      @name_id_maps[:items] = Omelette::Util.build_items_map db_client
+      db_client.close if db_client
+    end
+    return @name_id_maps
+  end
+
+  def create_db_client
+    Mysql2::Client.new(
+        host: @settings['omeka_db_host'],
+        username: @settings['omeka_db_username'],
+        password: @settings['omeka_db_password'],
+        database: @settings['omeka_db_name'],
+        port: @settings['omeka_db_port']
+    )
   end
 
   # Pass a string file path, a Pathname, or a File object, for
@@ -48,13 +69,14 @@ class Omelette::Importer
     return @settings
   end
 
-  def to_item_type(item_type_name, aLambda = nil, &block)
-
+  def to_item_type(item_type_name, opts={}, &block)
+    source_locaiton = Omelette::Util.extract_caller_location(caller.first)
+    @import_steps << ToItemTypeStep.new(item_type_name, opts, source_locaiton, name_id_maps,&block)
   end
 
-  def to_element(element_name, element_set_name, aLambda = nil, &block)
-    @import_steps << ToElementStep.new(element_name, element_set_name, elements_map, aLambda, block, Omelette::Util.extract_caller_location(caller.first))
-  end
+  # def to_element(element_name, element_set_name, aLambda = nil, &block)
+  #   @import_steps << ToElementStep.new(element_name, element_set_name, elements_map, aLambda, block, Omelette::Util.extract_caller_location(caller.first))
+  # end
 
   # Processes a single item according to extracting rules set up in
   # this importer. Returns the output hash (a hash whose keys are
@@ -72,43 +94,17 @@ class Omelette::Importer
   def map_to_context!(context)
     @import_steps.each do |import_step|
       break if context.skip?
-
+      next unless import_step.can_process? context.source_item_id
       # set the to_element step for error reporting
       context.import_step = import_step
-      elements = log_mapping_errors context, import_step do
+      item = Omelette::Util.log_mapping_errors context, import_step do
         import_step.execute context
       end
-      add_elements_to_context!(elements, context) if import_step.to_element_step?
-
+      context.output_hash = item
       # Unset the import step after it's finished
       context.import_step = nil
     end
     return context
-  end
-
-  # Add the accumulator to the context with the correct field name
-  # Do post-processing on the accumulator (remove nil values, allow empty
-  # fields, etc)
-  #
-  # Only get here if we've got a to_field step; otherwise the
-  # call to get a field_name will throw an error
-
-  ALLOW_NIL_VALUES       = 'allow_nil_values'.freeze
-  ALLOW_EMPTY_FIELDS     = 'allow_empty_fields'.freeze
-  ALLOW_DUPLICATE_VALUES = 'allow_duplicate_values'.freeze
-
-  def add_elements_to_context!(elements, context)
-    elements.compact! unless settings[ALLOW_NIL_VALUES]
-    return if elements.empty? and not (settings[ALLOW_EMPTY_FIELDS])
-
-    context.add_elements elements
-    #existing_element.uniq! unless settings[ALLOW_DUPLICATE_VALUES]
-
-  rescue NameError => ex
-    msg = 'Tried to call add_element_to_context with a non-to_element step'
-    msg += context.import_step.inspect
-    logger.error msg
-    raise ArgumentError.new msg
   end
 
   def process(files)
@@ -143,6 +139,8 @@ class Omelette::Importer
         batch_start_time = Time.now
       end
 
+      # check the item_type
+      # use the correct item_type
       thread_pool.maybe_in_thread_pool(context) do |context|
         map_to_context! context
         if context.skip?
@@ -217,25 +215,6 @@ class Omelette::Importer
     logger.debug "Skipped record #{context.position}: #{context.skipmessage}"
   end
   private :log_skip
-
-  def log_mapping_errors(context, import_step)
-    begin
-      yield
-    rescue Exception => ex
-      msg = "Unexpected error on record id `#{context.source_item_id}` at file position #{context.position}\n"
-      msg += "    while executing #{import_step.inspect}\n"
-      msg += Omelette::Util.exception_to_log_message(e)
-
-      logger.error msg
-      begin
-        logger.debug "Item: #{context.source_item.to_s}"
-      rescue Exception => item_exception
-        logger.debug "(Could not log item, #{item_exception})"
-      end
-      raise ex
-    end
-  end
-  private :log_mapping_errors
 
   # Create logger according to settings
   def create_logger

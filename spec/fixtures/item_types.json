@@ -1,0 +1,575 @@
+[
+  {
+    "id": 1,
+    "url": "http:\/\/localhost\/api\/item_types\/1",
+    "name": "Text",
+    "description": "A resource consisting primarily of words for reading. Examples include books, letters, dissertations, poems, newspapers, articles, archives of mailing lists. Note that facsimiles or images of texts are still of the genre Text.",
+    "elements": [
+      {
+        "id": 7,
+        "url": "http:\/\/localhost\/api\/elements\/7"
+      },
+      {
+        "id": 1,
+        "url": "http:\/\/localhost\/api\/elements\/1"
+      }
+    ],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=1",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 3,
+    "url": "http:\/\/localhost\/api\/item_types\/3",
+    "name": "Moving Image",
+    "description": "A series of visual representations imparting an impression of motion when shown in succession. Examples include animations, movies, television programs, videos, zoetropes, or visual output from a simulation.",
+    "elements": [
+      {
+        "id": 7,
+        "url": "http:\/\/localhost\/api\/elements\/7"
+      },
+      {
+        "id": 11,
+        "url": "http:\/\/localhost\/api\/elements\/11"
+      },
+      {
+        "id": 12,
+        "url": "http:\/\/localhost\/api\/elements\/12"
+      },
+      {
+        "id": 13,
+        "url": "http:\/\/localhost\/api\/elements\/13"
+      },
+      {
+        "id": 14,
+        "url": "http:\/\/localhost\/api\/elements\/14"
+      },
+      {
+        "id": 5,
+        "url": "http:\/\/localhost\/api\/elements\/5"
+      }
+    ],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=3",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 4,
+    "url": "http:\/\/localhost\/api\/item_types\/4",
+    "name": "Oral History",
+    "description": "A resource containing historical information obtained in interviews with persons having firsthand knowledge.",
+    "elements": [
+      {
+        "id": 7,
+        "url": "http:\/\/localhost\/api\/elements\/7"
+      },
+      {
+        "id": 11,
+        "url": "http:\/\/localhost\/api\/elements\/11"
+      },
+      {
+        "id": 15,
+        "url": "http:\/\/localhost\/api\/elements\/15"
+      },
+      {
+        "id": 5,
+        "url": "http:\/\/localhost\/api\/elements\/5"
+      },
+      {
+        "id": 2,
+        "url": "http:\/\/localhost\/api\/elements\/2"
+      },
+      {
+        "id": 3,
+        "url": "http:\/\/localhost\/api\/elements\/3"
+      },
+      {
+        "id": 4,
+        "url": "http:\/\/localhost\/api\/elements\/4"
+      },
+      {
+        "id": 16,
+        "url": "http:\/\/localhost\/api\/elements\/16"
+      }
+    ],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=4",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 5,
+    "url": "http:\/\/localhost\/api\/item_types\/5",
+    "name": "Sound",
+    "description": "A resource primarily intended to be heard. Examples include a music playback file format, an audio compact disc, and recorded speech or sounds.",
+    "elements": [
+      {
+        "id": 7,
+        "url": "http:\/\/localhost\/api\/elements\/7"
+      },
+      {
+        "id": 11,
+        "url": "http:\/\/localhost\/api\/elements\/11"
+      },
+      {
+        "id": 15,
+        "url": "http:\/\/localhost\/api\/elements\/15"
+      },
+      {
+        "id": 5,
+        "url": "http:\/\/localhost\/api\/elements\/5"
+      }
+    ],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=5",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 6,
+    "url": "http:\/\/localhost\/api\/item_types\/6",
+    "name": "Still Image",
+    "description": "A static visual representation. Examples include paintings, drawings, graphic designs, plans and maps. Recommended best practice is to assign the type Text to images of textual materials.",
+    "elements": [
+      {
+        "id": 7,
+        "url": "http:\/\/localhost\/api\/elements\/7"
+      },
+      {
+        "id": 10,
+        "url": "http:\/\/localhost\/api\/elements\/10"
+      }
+    ],
+    "items": {
+      "count": 4,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=6",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 7,
+    "url": "http:\/\/localhost\/api\/item_types\/7",
+    "name": "Website",
+    "description": "A resource comprising of a web page or web pages and all related assets ( such as images, sound and video files, etc. ).",
+    "elements": [
+      {
+        "id": 6,
+        "url": "http:\/\/localhost\/api\/elements\/6"
+      }
+    ],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=7",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 8,
+    "url": "http:\/\/localhost\/api\/item_types\/8",
+    "name": "Event",
+    "description": "A non-persistent, time-based occurrence. Metadata for an event provides descriptive information that is the basis for discovery of the purpose, location, duration, and responsible agents associated with an event. Examples include an exhibition, webcast, conference, workshop, open day, performance, battle, trial, wedding, tea party, conflagration.",
+    "elements": [
+      {
+        "id": 29,
+        "url": "http:\/\/localhost\/api\/elements\/29"
+      },
+      {
+        "id": 30,
+        "url": "http:\/\/localhost\/api\/elements\/30"
+      },
+      {
+        "id": 11,
+        "url": "http:\/\/localhost\/api\/elements\/11"
+      }
+    ],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=8",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 9,
+    "url": "http:\/\/localhost\/api\/item_types\/9",
+    "name": "Email",
+    "description": "A resource containing textual messages and binary attachments sent electronically from one person to another or one person to many people.",
+    "elements": [
+      {
+        "id": 17,
+        "url": "http:\/\/localhost\/api\/elements\/17"
+      },
+      {
+        "id": 18,
+        "url": "http:\/\/localhost\/api\/elements\/18"
+      },
+      {
+        "id": 20,
+        "url": "http:\/\/localhost\/api\/elements\/20"
+      },
+      {
+        "id": 19,
+        "url": "http:\/\/localhost\/api\/elements\/19"
+      },
+      {
+        "id": 21,
+        "url": "http:\/\/localhost\/api\/elements\/21"
+      },
+      {
+        "id": 22,
+        "url": "http:\/\/localhost\/api\/elements\/22"
+      },
+      {
+        "id": 23,
+        "url": "http:\/\/localhost\/api\/elements\/23"
+      }
+    ],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=9",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 10,
+    "url": "http:\/\/localhost\/api\/item_types\/10",
+    "name": "Lesson Plan",
+    "description": "A resource that gives a detailed description of a course of instruction.",
+    "elements": [
+      {
+        "id": 24,
+        "url": "http:\/\/localhost\/api\/elements\/24"
+      },
+      {
+        "id": 25,
+        "url": "http:\/\/localhost\/api\/elements\/25"
+      },
+      {
+        "id": 26,
+        "url": "http:\/\/localhost\/api\/elements\/26"
+      },
+      {
+        "id": 11,
+        "url": "http:\/\/localhost\/api\/elements\/11"
+      },
+      {
+        "id": 27,
+        "url": "http:\/\/localhost\/api\/elements\/27"
+      }
+    ],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=10",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 11,
+    "url": "http:\/\/localhost\/api\/item_types\/11",
+    "name": "Hyperlink",
+    "description": "A link, or reference, to another resource on the Internet.",
+    "elements": [
+      {
+        "id": 28,
+        "url": "http:\/\/localhost\/api\/elements\/28"
+      }
+    ],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=11",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 12,
+    "url": "http:\/\/localhost\/api\/item_types\/12",
+    "name": "Person",
+    "description": "An individual.",
+    "elements": [
+      {
+        "id": 31,
+        "url": "http:\/\/localhost\/api\/elements\/31"
+      },
+      {
+        "id": 32,
+        "url": "http:\/\/localhost\/api\/elements\/32"
+      },
+      {
+        "id": 33,
+        "url": "http:\/\/localhost\/api\/elements\/33"
+      },
+      {
+        "id": 34,
+        "url": "http:\/\/localhost\/api\/elements\/34"
+      },
+      {
+        "id": 35,
+        "url": "http:\/\/localhost\/api\/elements\/35"
+      },
+      {
+        "id": 36,
+        "url": "http:\/\/localhost\/api\/elements\/36"
+      }
+    ],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=12",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 13,
+    "url": "http:\/\/localhost\/api\/item_types\/13",
+    "name": "Interactive Resource",
+    "description": "A resource requiring interaction from the user to be understood, executed, or experienced. Examples include forms on Web pages, applets, multimedia learning objects, chat services, or virtual reality environments.",
+    "elements": [],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=13",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 14,
+    "url": "http:\/\/localhost\/api\/item_types\/14",
+    "name": "Dataset",
+    "description": "Data encoded in a defined structure. Examples include lists, tables, and databases. A dataset may be useful for direct machine processing.",
+    "elements": [],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=14",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 15,
+    "url": "http:\/\/localhost\/api\/item_types\/15",
+    "name": "Physical Object",
+    "description": "An inanimate, three-dimensional object or substance. Note that digital representations of, or surrogates for, these objects should use Moving Image, Still Image, Text or one of the other types.",
+    "elements": [],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=15",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 16,
+    "url": "http:\/\/localhost\/api\/item_types\/16",
+    "name": "Service",
+    "description": "A system that provides one or more functions. Examples include a photocopying service, a banking service, an authentication service, interlibrary loans, a Z39.50 or Web server.",
+    "elements": [],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=16",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 17,
+    "url": "http:\/\/localhost\/api\/item_types\/17",
+    "name": "Software",
+    "description": "A computer program in source or compiled form. Examples include a C source file, MS-Windows .exe executable, or Perl script.",
+    "elements": [],
+    "items": {
+      "count": 0,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=17",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 18,
+    "url": "http:\/\/localhost\/api\/item_types\/18",
+    "name": "CWGK Early Access Document",
+    "description": "Initial Publication",
+    "elements": [
+      {
+        "id": 68,
+        "url": "http:\/\/localhost\/api\/elements\/68"
+      },
+      {
+        "id": 69,
+        "url": "http:\/\/localhost\/api\/elements\/69"
+      }
+    ],
+    "items": {
+      "count": 10528,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=18",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 19,
+    "url": "http:\/\/localhost\/api\/item_types\/19",
+    "name": "CWGK Person",
+    "description": "",
+    "elements": [
+      {
+        "id": 31,
+        "url": "http:\/\/localhost\/api\/elements\/31"
+      },
+      {
+        "id": 33,
+        "url": "http:\/\/localhost\/api\/elements\/33"
+      },
+      {
+        "id": 70,
+        "url": "http:\/\/localhost\/api\/elements\/70"
+      },
+      {
+        "id": 71,
+        "url": "http:\/\/localhost\/api\/elements\/71"
+      },
+      {
+        "id": 36,
+        "url": "http:\/\/localhost\/api\/elements\/36"
+      },
+      {
+        "id": 77,
+        "url": "http:\/\/localhost\/api\/elements\/77"
+      },
+      {
+        "id": 78,
+        "url": "http:\/\/localhost\/api\/elements\/78"
+      },
+      {
+        "id": 35,
+        "url": "http:\/\/localhost\/api\/elements\/35"
+      }
+    ],
+    "items": {
+      "count": 7,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=19",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 20,
+    "url": "http:\/\/localhost\/api\/item_types\/20",
+    "name": "CWGK Organization",
+    "description": "",
+    "elements": [
+      {
+        "id": 73,
+        "url": "http:\/\/localhost\/api\/elements\/73"
+      },
+      {
+        "id": 74,
+        "url": "http:\/\/localhost\/api\/elements\/74"
+      },
+      {
+        "id": 36,
+        "url": "http:\/\/localhost\/api\/elements\/36"
+      },
+      {
+        "id": 77,
+        "url": "http:\/\/localhost\/api\/elements\/77"
+      },
+      {
+        "id": 78,
+        "url": "http:\/\/localhost\/api\/elements\/78"
+      },
+      {
+        "id": 35,
+        "url": "http:\/\/localhost\/api\/elements\/35"
+      }
+    ],
+    "items": {
+      "count": 4,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=20",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 21,
+    "url": "http:\/\/localhost\/api\/item_types\/21",
+    "name": "CWGK Place",
+    "description": "",
+    "elements": [
+      {
+        "id": 75,
+        "url": "http:\/\/localhost\/api\/elements\/75"
+      },
+      {
+        "id": 76,
+        "url": "http:\/\/localhost\/api\/elements\/76"
+      },
+      {
+        "id": 36,
+        "url": "http:\/\/localhost\/api\/elements\/36"
+      },
+      {
+        "id": 77,
+        "url": "http:\/\/localhost\/api\/elements\/77"
+      },
+      {
+        "id": 78,
+        "url": "http:\/\/localhost\/api\/elements\/78"
+      },
+      {
+        "id": 35,
+        "url": "http:\/\/localhost\/api\/elements\/35"
+      }
+    ],
+    "items": {
+      "count": 3,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=21",
+      "resource": "items"
+    },
+    "extended_resources": []
+  },
+  {
+    "id": 22,
+    "url": "http:\/\/localhost\/api\/item_types\/22",
+    "name": "CWGK Geographical Feature",
+    "description": "",
+    "elements": [
+      {
+        "id": 36,
+        "url": "http:\/\/localhost\/api\/elements\/36"
+      },
+      {
+        "id": 77,
+        "url": "http:\/\/localhost\/api\/elements\/77"
+      },
+      {
+        "id": 78,
+        "url": "http:\/\/localhost\/api\/elements\/78"
+      },
+      {
+        "id": 35,
+        "url": "http:\/\/localhost\/api\/elements\/35"
+      }
+    ],
+    "items": {
+      "count": 1,
+      "url": "http:\/\/localhost\/api\/items\/?item_type=22",
+      "resource": "items"
+    },
+    "extended_resources": []
+  }
+]

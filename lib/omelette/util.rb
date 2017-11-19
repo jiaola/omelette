@@ -142,5 +142,47 @@ module Omelette
       return elements_map
     end
     module_function :build_elements_map
+
+    def build_item_types_map(api_root)
+      result = RestClient.get "#{api_root}/item_types"
+      item_types = JSON.parse(result.body)
+      return item_types.map { |s| [ s['name'], s['id'] ] }.to_h
+    end
+    module_function :build_item_types_map
+
+    def build_collections_map(db_client)
+      results = db_client.query 'SELECT collection_id, name FROM omeka_collection_trees'
+      return results.map { |r|
+        [ r['name'].to_sym, r['collection_id'] ]
+      }.to_h
+    end
+    module_function :build_collections_map
+
+    def build_items_map(db_client)
+      results = db_client.query("SELECT t.record_id, t.text FROM omeka_element_texts t, omeka_elements e WHERE e.name='Identifier' and e.id=t.element_id")
+      results.map { |r|
+        [ r['text'].to_sym, r['record_id'].to_s ]
+      }.to_h
+    end
+    module_function :build_items_map
+
+    def log_mapping_errors(context, import_step)
+      begin
+        yield
+      rescue Exception => ex
+        msg = "Unexpected error on record id `#{context.source_item_id}` at file position #{context.position}\n"
+        msg += "    while executing #{import_step.inspect}\n"
+        msg += Omelette::Util.exception_to_log_message(ex)
+
+        context.logger.error msg
+        begin
+          context.logger.debug "Item: #{context.source_item.to_s}"
+        rescue Exception => item_exception
+          context.logger.debug "(Could not log item, #{item_exception})"
+        end
+        raise ex
+      end
+    end
+    module_function :log_mapping_errors
   end
 end

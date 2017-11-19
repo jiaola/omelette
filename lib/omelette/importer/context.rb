@@ -7,7 +7,7 @@ class Omelette::Importer
       # TODO, argument checking for required args?
 
       self.clipboard   = {}
-      self.output_hash = { element_texts: [] }
+      self.output_hash = nil
 
       hash_init.each_pair do |key, value|
         self.send("#{key}=", value)

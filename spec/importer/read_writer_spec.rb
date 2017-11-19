@@ -29,14 +29,20 @@ describe Omelette::Importer do
     @importer = Omelette::Importer.new('processing_thread_pool' => nil)
     @importer.writer_class = memory_writer_class
     @files = [ file_fixture('person_tei.xml').to_s, file_fixture('organization_tei.xml').to_s ]
-    @importer.settings['omeka_api_root'] = 'www.example.com'
+    @importer.settings['omeka_api_root'] = 'http://www.example.com/api'
     @importer.settings['reader_class_name'] = 'Omelette::XmlReader'
+    allow(@importer).to receive(:create_db_client).and_return(nil)
   end
 
   describe '#process' do
     it 'works' do
       @importer.instance_eval do
-        to_element 'Birth Date', 'Item Type Metadata', extract_xpath('//tei:particDesc/tei:person/tei:birth/@when')
+        to_item_type 'CWGK Person', if: lambda {|id| id.include? 'person'} do
+          to_element 'Birth Date', 'Item Type Metadata', extract_xpath('//tei:particDesc/tei:person/tei:birth/@when')
+        end
+        to_item_type 'CWGK Organization', if: lambda {|id| id.include? 'organization'} do
+          to_element 'Creation Date', 'Item Type Metadata', extract_xpath('//tei:particDesc/tei:org/tei:event[@type="begun"]/@when')
+        end
       end
       result = @importer.process @files
       expect(result).to be true

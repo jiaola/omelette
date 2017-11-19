@@ -27,13 +27,18 @@ RSpec.configure do |config|
   config.before :all do
     @elements_data = file_fixture('elements.json').read
     @element_sets_data = file_fixture('element_sets.json').read
+    @item_types_data = file_fixture('item_types.json').read
   end
 
   # WebMock reset after each example. Therefore we can't use it in before :all.
-  config.before :all do
+  config.before :each do
+    allow(Omelette::Util).to receive(:build_collections_map).and_return({'CWGK Organization': 1, 'CWGK Person': 2 })
+    allow(Omelette::Util).to receive(:build_items_map).and_return({'O00000376': 100, 'N00000247': 200})
     stub_request(:get, /elements/).
         to_return(status: 200, body: @elements_data, headers: {})
     stub_request(:get, /element_sets/).
         to_return(status: 200, body: @element_sets_data, headers: {})
+    stub_request(:get, /item_types/).
+        to_return(status: 200, body: @item_types_data, headers: {})
   end
 end
