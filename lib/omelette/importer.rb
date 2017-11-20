@@ -100,10 +100,21 @@ class Omelette::Importer
       item = Omelette::Util.log_mapping_errors context, import_step do
         import_step.execute context
       end
-      # merge the new item to the one in context
-      context.output_item.merge!(item) { |k, c, i|
-        k == :element_texts ? ( c | i ) : i
+      # merge the new item to the one in context. Concat the element_texts values, and overwrite
+      # any other existing keys
+      context.output_item.merge!(item) { |_k, c, i|
+        if c.is_a?(Array) and i.is_a?(Array)
+          c | i
+        elsif c.is_a?(Array)
+          c << i
+        elsif i.is_a?(Array)
+          i << c
+        else
+          i
+        end
       }
+      # Set Omeka Item ID
+      context.omeka_item_id = name_id_maps[:items][item[:identifier]]
       # Unset the import step after it's finished
       context.import_step = nil
     end

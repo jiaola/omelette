@@ -16,8 +16,8 @@ class Omelette::Importer
       @skip = false
     end
 
-    attr_accessor :clipboard, :output_item, :logger
-    attr_accessor :import_step, :source_item, :settings, :source_item_id
+    attr_accessor :clipboard, :output_item, :logger, :map_step, :import_step, :source_item, :settings, :source_item_id, :omeka_item_id
+
     # 1-based position in stream of processed records.
     attr_accessor :position
 
@@ -36,25 +36,6 @@ class Omelette::Importer
       @skip
     end
 
-    def item_type=(item_type)
-      self.output_item[:item_type] = {id: item_type}
-    end
-
-    def item_type
-      self.output_item.fetch(:item_type, {})[:id]
-    end
-
-    def collection=(collection)
-      self.output_item[:collection] = {id: collection}
-    end
-
-    def collection
-      self.output_item.fetch(:collection, {})[:id]
-    end
-
-    def add_elements(elements)
-      self.output_item[:element_texts].concat elements
-    end
   end
 
 end

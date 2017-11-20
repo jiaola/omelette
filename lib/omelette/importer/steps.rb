@@ -5,7 +5,7 @@ class Omelette::Importer
 
     def initialize(item_type_name, opts, source_location, name_id_maps, &block)
       @item_type_name = item_type_name
-      @import_steps = []
+      @map_steps = []
       @if_eval = opts[:if] if opts.has_key? :if
       @source_location = source_location
       @name_id_maps = name_id_maps
@@ -13,14 +13,6 @@ class Omelette::Importer
 
       @item_type_id = @name_id_maps[:item_types][@item_type_name]
       instance_eval &block
-    end
-
-    def to_element_step?
-      false
-    end
-
-    def to_item_type_step?
-      true
     end
 
     def validate!
@@ -44,39 +36,39 @@ class Omelette::Importer
 
     def execute(context)
       item = { element_texts: [], item_type: {id: item_type_id}, public: true, featured: false }
-      @import_steps.each do |import_step|
+      @map_steps.each do |map_step|
         break if context.skip?
-        context.import_step = import_step
-        result = Omelette::Util.log_mapping_errors context, import_step do
-          import_step.execute context
+        context.map_step = map_step
+        result = Omelette::Util.log_mapping_errors context, map_step do
+          map_step.execute context
         end
         begin
-          if import_step.is_a? ToElementStep
+          if map_step.is_a? ToElementStep
             add_elements_to_item(result, item)
           else
             add_field_to_item(result, item)
           end
         rescue NameError => ex
           msg = 'Tried to call add_element_to_item with a non-to_element step'
-          msg += context.import_step.inspect
+          msg += context.map_step.inspect
           context.logger.error msg
           raise ArgumentError.new msg
         end
 
-        context.import_step = nil
+        context.map_step = nil
       end
       return item
     end
 
     def to_element(element_name, element_set_name, aLambda = nil, &block)
-      @import_steps << ToElementStep.new(element_name, element_set_name, @name_id_maps[:elements], aLambda, block, Omelette::Util.extract_caller_location(caller.first))
+      @map_steps << ToElementStep.new(element_name, element_set_name, @name_id_maps[:elements], aLambda, block, Omelette::Util.extract_caller_location(caller.first))
     end
 
     def to_field(name, aLambda = nil, &block)
       if name == 'collection'
-        @import_steps << ToCollectionStep.new(name, aLambda, block,Omelette::Util.extract_caller_location(caller.first))
+        @map_steps << ToCollectionStep.new(name, aLambda, block,Omelette::Util.extract_caller_location(caller.first))
       else
-        @import_steps << ToFieldStep.new(name, aLambda, block,Omelette::Util.extract_caller_location(caller.first))
+        @map_steps << ToFieldStep.new(name, aLambda, block,Omelette::Util.extract_caller_location(caller.first))
       end
 
     end
@@ -175,10 +167,6 @@ class Omelette::Importer
           raise ArityError.new("error parsing element '#{@name}': block/proc given to to_element needs 2 or 3 (or variable) arguments #{proc}, (#{self.inspect})")
         end
       end
-    end
-
-    def to_element_step?
-      true
     end
 
     def execute(context)

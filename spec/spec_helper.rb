@@ -32,8 +32,8 @@ RSpec.configure do |config|
 
   # WebMock reset after each example. Therefore we can't use it in before :all.
   config.before :each do
-    allow(Omelette::Util).to receive(:build_collections_map).and_return({'CWGK Organization': 1, 'CWGK Person': 2 })
-    allow(Omelette::Util).to receive(:build_items_map).and_return({'O00000376': 100, 'N00000247': 200})
+    allow(Omelette::Util).to receive(:build_collections_map).and_return({'CWGK Organization' => 1, 'CWGK Person' => 2 })
+    allow(Omelette::Util).to receive(:build_items_map).and_return({'N00000247' => 200})
     stub_request(:get, /elements/).
         to_return(status: 200, body: @elements_data, headers: {})
     stub_request(:get, /element_sets/).
