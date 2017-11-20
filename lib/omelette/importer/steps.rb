@@ -92,7 +92,7 @@ class Omelette::Importer
     end
   end
 
-  class ToFieldStep
+  class LambdaBlockStep
     attr_accessor :name, :source_location
     attr_reader :lambda
     def initialize(name, lambda, block, source_location)
@@ -134,7 +134,14 @@ class Omelette::Importer
         @block.call(item, accumulator, context)
       end
 
-      return accumulator.map { |value| [@name.to_sym, value]}.to_h
+      return accumulator
+    end
+  end
+
+  class ToFieldStep < LambdaBlockStep
+    def execute(context)
+      accumulator = super(context)
+      accumulator.map { |value| [@name.to_sym, value]}.to_h
     end
   end
 
@@ -145,7 +152,7 @@ class Omelette::Importer
     end
   end
 
-  class ToElementStep < ToFieldStep
+  class ToElementStep < LambdaBlockStep
     attr_accessor :element_set_name, :element_id, :element_map
 
     def initialize(element_name, element_set_name, element_map, lambda, block, source_location)
