@@ -43,7 +43,7 @@ class Omelette::Importer
     end
 
     def execute(context)
-      item = { element_texts: [], item_type: {id: item_type_id} }
+      item = { element_texts: [], item_type: {id: item_type_id}, public: true, featured: false }
       @import_steps.each do |import_step|
         break if context.skip?
         context.import_step = import_step
@@ -73,7 +73,12 @@ class Omelette::Importer
     end
 
     def to_field(name, aLambda = nil, &block)
-      @import_steps << ToFieldStep.new(name, aLambda, block,Omelette::Util.extract_caller_location(caller.first))
+      if name == 'collection'
+        @import_steps << ToCollectionStep.new(name, aLambda, block,Omelette::Util.extract_caller_location(caller.first))
+      else
+        @import_steps << ToFieldStep.new(name, aLambda, block,Omelette::Util.extract_caller_location(caller.first))
+      end
+
     end
 
     def add_elements_to_item(elements, item)
@@ -129,6 +134,13 @@ class Omelette::Importer
       end
 
       return accumulator
+    end
+  end
+
+  class ToCollectionStep < ToFieldStep
+    def execute(context)
+      accumulator = super(context)
+      accumulator.map { |value| { id: value } }
     end
   end
 

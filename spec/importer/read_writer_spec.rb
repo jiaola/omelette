@@ -38,9 +38,7 @@ describe Omelette::Importer do
     it 'works' do
       @importer.instance_eval do
         to_item_type 'CWGK Person', if: lambda {|id| id.include? 'person'} do
-          to_field 'collection', extract_xpath('//tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:collection/text()') do | _item, accumulator |
-            accumulator.map! { |value| { id: value } }
-          end
+          to_field 'collection', extract_xpath('//tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:collection/text()')
           to_element 'Birth Date', 'Item Type Metadata', extract_xpath('//tei:particDesc/tei:person/tei:birth/@when')
         end
         to_item_type 'CWGK Organization', if: lambda {|id| id.include? 'organization'} do
