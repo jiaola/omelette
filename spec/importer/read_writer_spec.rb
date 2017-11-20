@@ -38,10 +38,16 @@ describe Omelette::Importer do
     it 'works' do
       @importer.instance_eval do
         to_item_type 'CWGK Person', if: lambda {|id| id.include? 'person'} do
+          to_field 'identifier', extract_xpath('//tei:TEI/@xml:id') do |_item, accumulator|
+            accumulator.map! {|x| x[1..-1]}
+          end
           to_field 'collection', extract_xpath('//tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:collection/text()')
           to_element 'Birth Date', 'Item Type Metadata', extract_xpath('//tei:particDesc/tei:person/tei:birth/@when')
         end
         to_item_type 'CWGK Organization', if: lambda {|id| id.include? 'organization'} do
+          to_field 'identifier', extract_xpath('//tei:TEI/@xml:id') do |_item, accumulator|
+            accumulator.map {|x| x[1..-1]}
+          end
           to_element 'Creation Date', 'Item Type Metadata', extract_xpath('//tei:particDesc/tei:org/tei:event[@type="begun"]/@when')
         end
       end
