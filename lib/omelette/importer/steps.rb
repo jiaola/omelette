@@ -54,7 +54,7 @@ class Omelette::Importer
           if import_step.is_a? ToElementStep
             add_elements_to_item(result, item)
           else
-            add_field_to_item(result, item)
+            add_field_to_item(result, item, context)
           end
         rescue NameError => ex
           msg = 'Tried to call add_element_to_item with a non-to_element step'
@@ -86,13 +86,14 @@ class Omelette::Importer
       item[:element_texts].concat elements
     end
 
-    def add_field_to_item(field, item)
+    def add_field_to_item(field, item, context)
       return if field.empty?
-      item.merge! field
+      item.merge! field.map {|value| [context.import_step.name.to_sym, value]}.to_h
     end
   end
 
   class ToFieldStep
+    attr_accessor :name, :source_location
     attr_reader :lambda
     def initialize(name, lambda, block, source_location)
       @name = name
