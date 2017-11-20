@@ -2,11 +2,11 @@ module Omelette::Macros
   module Xpath
     def extract_xpath(xpath, options={})
       options[:html] = false unless options.has_key? :html
-      lambda do |item, elements, context|
+      lambda do |item, accumulator|
         nodes = item.xpath xpath, tei: 'http://www.tei-c.org/ns/1.0'
-        nodes.map { |node|
-          elements << { html: options[:html], element: { id: context.import_step.element_id }, text: node.to_s.strip }
-        }
+        nodes.each do |node|
+          accumulator << node.to_s.strip
+        end
       end
     end
     module_function :extract_xpath

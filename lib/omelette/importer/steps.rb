@@ -1,7 +1,8 @@
 class Omelette::Importer
+
   class ToItemTypeStep
     attr_accessor :item_type_name, :item_type_id, :block, :source_location, :item_type_map
-    attr_reader :logger
+
     def initialize(item_type_name, opts, source_location, name_id_maps, &block)
       @item_type_name = item_type_name
       @import_steps = []
@@ -26,7 +27,7 @@ class Omelette::Importer
     end
 
     def inspect
-      "(to_item_type #{self.item_type_name} at #{self.source_location})"
+      "(to_item_type #{@item_type_name} at #{@source_location})"
     end
 
     def can_process?(id)
@@ -46,11 +47,15 @@ class Omelette::Importer
       @import_steps.each do |import_step|
         break if context.skip?
         context.import_step = import_step
-        elements = Omelette::Util.log_mapping_errors context, import_step do
+        result = Omelette::Util.log_mapping_errors context, import_step do
           import_step.execute context
         end
         begin
-          add_elements_to_item!(elements, item) if import_step.to_element_step?
+          if import_step.is_a? ToElementStep
+            add_elements_to_item(result, item)
+          else
+            add_field_to_item(result, item)
+          end
         rescue NameError => ex
           msg = 'Tried to call add_element_to_item with a non-to_element step'
           msg += context.import_step.inspect
@@ -67,68 +72,47 @@ class Omelette::Importer
       @import_steps << ToElementStep.new(element_name, element_set_name, @name_id_maps[:elements], aLambda, block, Omelette::Util.extract_caller_location(caller.first))
     end
 
-    # Add the accumulator to the context with the correct field name
-    # Do post-processing on the accumulator (remove nil values, allow empty
-    # fields, etc)
-    #
-    # Only get here if we've got a to_field step; otherwise the
-    # call to get a field_name will throw an error
+    def to_field(name, aLambda = nil, &block)
+      @import_steps << ToFieldStep.new(name, aLambda, block,Omelette::Util.extract_caller_location(caller.first))
+    end
 
-    ALLOW_NIL_VALUES       = 'allow_nil_values'.freeze
-    ALLOW_EMPTY_FIELDS     = 'allow_empty_fields'.freeze
-    ALLOW_DUPLICATE_VALUES = 'allow_duplicate_values'.freeze
-
-    def add_elements_to_item!(elements, item)
+    def add_elements_to_item(elements, item)
       return if elements.empty?
       item[:element_texts].concat elements
     end
 
+    def add_field_to_item(field, item)
+      return if field.empty?
+      item.merge! field
+    end
   end
 
-  class ToElementStep
-    attr_accessor :element_name, :element_set_name, :element_id, :block, :source_location, :element_map
+  class ToFieldStep
     attr_reader :lambda
-
-    def initialize(element_name, element_set_name, element_map, lambda, block, source_location)
-      self.element_name = element_name
-      self.element_set_name = element_set_name
+    def initialize(name, lambda, block, source_location)
+      @name = name
       self.lambda = lambda
-      self.block = block
-      self.source_location = source_location
-      validate!
-
-      self.element_id = element_map[self.element_set_name][self.element_name]
+      @block = block
+      @source_location = source_location
     end
 
-    def validate!
-      if self.element_name.nil? || !self.element_name.is_a?(String) || self.element_name.empty?
-        raise NamingError.new("to_element requires the element name (as a string) as the first argument at #{self.source_location}")
-      end
-      if self.element_set_name.nil? || !self.element_set_name.is_a?(String) || self.element_set_name.empty?
-        raise NamingError.new("to_element requires the element set name (as a string) as the second argument at #{self.source_location}")
-      end
-
-      [self.lambda, self.block].each do |proc|
-        if proc && (proc.arity < 2 || proc.arity > 3)
-          raise ArityError.new("error parsing element '#{element_name}': block/proc given to to_element needs 2 or 3 (or variable) arguments #{proc}, (#{self.inspect})")
-        end
-      end
-    end
-
-    def to_element_step?
-      true
-    end
-
+    # Set the arity of the lambda expression just once, when we define it
     def lambda=(lam)
-      @lambda       = lam
-      @lambda_arity = @lambda ? @lambda.arity : 0
+      @lambda_arity = 0 # assume
+      return unless lam
+
+      @lambda = lam
+      if @lambda.is_a?(Proc)
+        @lambda_arity = @lambda.arity
+      else
+        raise NamingError.new("argument to each_record must be a block/lambda, not a #{lam.class} #{self.inspect}")
+      end
     end
 
     def inspect
-      "(to_element #{self.element_name} at #{self.source_location})"
+      "(to #{@name} at #{@source_location})"
     end
 
-    # to_element ""
     def execute(context)
       accumulator = []
       item = context.source_item
@@ -145,6 +129,43 @@ class Omelette::Importer
       end
 
       return accumulator
+    end
+  end
+
+  class ToElementStep < ToFieldStep
+    attr_accessor :element_set_name, :element_id, :element_map
+
+    def initialize(element_name, element_set_name, element_map, lambda, block, source_location)
+      @element_set_name = element_set_name
+      super(element_name, lambda, block, source_location)
+      validate!
+      @element_id = element_map[@element_set_name][@name]
+    end
+
+    def validate!
+      if @name.nil? || !@name.is_a?(String) || @name.empty?
+        raise NamingError.new("to_element requires the element name (as a string) as the first argument at #{@source_location}")
+      end
+      if @element_set_name.nil? || !@element_set_name.is_a?(String) || @element_set_name.empty?
+        raise NamingError.new("to_element requires the element set name (as a string) as the second argument at #{@source_location}")
+      end
+
+      [@lambda, @block].each do |proc|
+        if proc && (proc.arity < 2 || proc.arity > 3)
+          raise ArityError.new("error parsing element '#{@name}': block/proc given to to_element needs 2 or 3 (or variable) arguments #{proc}, (#{self.inspect})")
+        end
+      end
+    end
+
+    def to_element_step?
+      true
+    end
+
+    def execute(context)
+      accumulator = super(context)
+      accumulator.map { |value|
+        { html: false, element: {id: @element_id}, text: value }
+      }
     end
   end
 end

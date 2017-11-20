@@ -38,6 +38,9 @@ describe Omelette::Importer do
     it 'works' do
       @importer.instance_eval do
         to_item_type 'CWGK Person', if: lambda {|id| id.include? 'person'} do
+          to_field 'collection', extract_xpath('//tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:collection/text()') do | _item, accumulator |
+            accumulator.map! { |value| { id: value } }
+          end
           to_element 'Birth Date', 'Item Type Metadata', extract_xpath('//tei:particDesc/tei:person/tei:birth/@when')
         end
         to_item_type 'CWGK Organization', if: lambda {|id| id.include? 'organization'} do
@@ -50,7 +53,7 @@ describe Omelette::Importer do
       writer_settings = memory_writer_class.class_variable_get('@@last_writer_settings')
       expect(writer_settings['memory_writer.added']).not_to be nil
       expect(writer_settings['memory_writer.added'].length).to be 2
-      expect(writer_settings['memory_writer.added'].first.output_hash[:element_texts][0][:text]).to eq '1823'
+      expect(writer_settings['memory_writer.added'].first.output_item[:element_texts][0][:text]).to eq '1823'
       expect(writer_settings['logger']).not_to be nil
       expect(writer_settings['memory_writer.closed']).to be true
     end

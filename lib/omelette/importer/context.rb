@@ -7,7 +7,7 @@ class Omelette::Importer
       # TODO, argument checking for required args?
 
       self.clipboard   = {}
-      self.output_hash = nil
+      self.output_item = {}
 
       hash_init.each_pair do |key, value|
         self.send("#{key}=", value)
@@ -16,7 +16,7 @@ class Omelette::Importer
       @skip = false
     end
 
-    attr_accessor :clipboard, :output_hash, :logger
+    attr_accessor :clipboard, :output_item, :logger
     attr_accessor :import_step, :source_item, :settings, :source_item_id
     # 1-based position in stream of processed records.
     attr_accessor :position
@@ -37,23 +37,23 @@ class Omelette::Importer
     end
 
     def item_type=(item_type)
-      self.output_hash[:item_type] = {id: item_type}
+      self.output_item[:item_type] = {id: item_type}
     end
 
     def item_type
-      self.output_hash.fetch(:item_type, {})[:id]
+      self.output_item.fetch(:item_type, {})[:id]
     end
 
     def collection=(collection)
-      self.output_hash[:collection] = {id: collection}
+      self.output_item[:collection] = {id: collection}
     end
 
     def collection
-      self.output_hash.fetch(:collection, {})[:id]
+      self.output_item.fetch(:collection, {})[:id]
     end
 
     def add_elements(elements)
-      self.output_hash[:element_texts].concat elements
+      self.output_item[:element_texts].concat elements
     end
   end
 

@@ -82,16 +82,16 @@ class Omelette::Importer
   # this importer. Returns the output hash (a hash whose keys are
   # string fields, and values are arrays of one or more values in that field)
   #
-  # This is a convenience shortcut for #map_to_context! -- use that one
+  # This is a convenience shortcut for #map_to_context -- use that one
   # if you want to provide addtional context
   # like position, and/or get back the full context.
   def map_item(item)
     context = Context.new(source_item: item, settings: settings)
-    map_to_context! context
-    return context.output_hash
+    map_to_context context
+    return context.output_item
   end
 
-  def map_to_context!(context)
+  def map_to_context(context)
     @import_steps.each do |import_step|
       break if context.skip?
       next unless import_step.can_process? context.source_item_id
@@ -100,7 +100,10 @@ class Omelette::Importer
       item = Omelette::Util.log_mapping_errors context, import_step do
         import_step.execute context
       end
-      context.output_hash = item
+      # merge the new item to the one in context
+      context.output_item.merge!(item) { |k, c, i|
+        k == :element_texts ? ( c | i ) : i
+      }
       # Unset the import step after it's finished
       context.import_step = nil
     end
@@ -142,7 +145,7 @@ class Omelette::Importer
       # check the item_type
       # use the correct item_type
       thread_pool.maybe_in_thread_pool(context) do |context|
-        map_to_context! context
+        map_to_context context
         if context.skip?
           log_skip context
         else
