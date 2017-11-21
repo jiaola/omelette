@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'omelette/macros/xpath'
 require 'omelette/xml_reader'
 
@@ -25,7 +24,7 @@ memory_writer_class = Class.new do
 end
 
 describe Omelette::Importer do
-  before(:each) do
+  before :each do
     @importer = Omelette::Importer.new('processing_thread_pool' => nil)
     @importer.writer_class = memory_writer_class
     @files = [ file_fixture('person_tei.xml').to_s, file_fixture('organization_tei.xml').to_s ]
@@ -38,17 +37,17 @@ describe Omelette::Importer do
     it 'works' do
       @importer.instance_eval do
         to_item_type 'CWGK Person', if: lambda {|id| id.include? 'person'} do
-          to_field 'identifier', extract_xpath('//tei:TEI/@xml:id') do |_item, accumulator|
+          to_field 'identifier', extract_xpath('//tei:TEI/@xml:id', tei: 'http://www.tei-c.org/ns/1.0') do |_item, accumulator|
             accumulator.map! {|x| x[1..-1]}
           end
-          to_field 'collection', extract_xpath('//tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:collection/text()')
-          to_element 'Birth Date', 'Item Type Metadata', extract_xpath('//tei:particDesc/tei:person/tei:birth/@when')
+          to_field 'collection', extract_xpath('//tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc/tei:msIdentifier/tei:collection/text()', tei: 'http://www.tei-c.org/ns/1.0')
+          to_element 'Birth Date', 'Item Type Metadata', extract_xpath('//tei:particDesc/tei:person/tei:birth/@when', tei: 'http://www.tei-c.org/ns/1.0')
         end
         to_item_type 'CWGK Organization', if: lambda {|id| id.include? 'organization'} do
-          to_field 'identifier', extract_xpath('//tei:TEI/@xml:id') do |_item, accumulator|
+          to_field 'identifier', extract_xpath('//tei:TEI/@xml:id', tei: 'http://www.tei-c.org/ns/1.0') do |_item, accumulator|
             accumulator.map {|x| x[1..-1]}
           end
-          to_element 'Creation Date', 'Item Type Metadata', extract_xpath('//tei:particDesc/tei:org/tei:event[@type="begun"]/@when')
+          to_element 'Creation Date', 'Item Type Metadata', extract_xpath('//tei:particDesc/tei:org/tei:event[@type="begun"]/@when', tei: 'http://www.tei-c.org/ns/1.0')
         end
       end
       result = @importer.process @files
