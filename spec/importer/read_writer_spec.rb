@@ -56,7 +56,7 @@ describe Omelette::Importer do
       writer_settings = memory_writer_class.class_variable_get('@@last_writer_settings')
       expect(writer_settings['memory_writer.added']).not_to be nil
       expect(writer_settings['memory_writer.added'].length).to be 2
-      expect(writer_settings['memory_writer.added'].first.output_item[:element_texts][0][:text]).to eq '1823'
+      expect(writer_settings['memory_writer.added'].first.omeka_item[:element_texts][0][:text]).to eq '1823'
       expect(writer_settings['logger']).not_to be nil
       expect(writer_settings['memory_writer.closed']).to be true
     end

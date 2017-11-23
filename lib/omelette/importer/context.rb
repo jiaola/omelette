@@ -6,8 +6,8 @@ class Omelette::Importer
     def initialize(hash_init = {})
       # TODO, argument checking for required args?
 
-      self.clipboard   = {}
-      self.output_item = {}
+      self.clipboard = {}
+      self.omeka_item = {}
 
       hash_init.each_pair do |key, value|
         self.send("#{key}=", value)
@@ -16,7 +16,7 @@ class Omelette::Importer
       @skip = false
     end
 
-    attr_accessor :clipboard, :output_item, :logger, :map_step, :import_step, :source_item, :settings, :source_item_id, :omeka_item_id
+    attr_accessor :clipboard, :omeka_item, :omeka_item_id, :logger, :map_step, :import_step, :source_item, :settings, :source_item_id, :mappings
 
     # 1-based position in stream of processed records.
     attr_accessor :position

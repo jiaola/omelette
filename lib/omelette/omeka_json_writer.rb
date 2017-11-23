@@ -12,10 +12,10 @@ class Omelette::OmekaJsonWriter
     item_id = context.omeka_item_id
     if item_id.nil?  # new item, post
       url = "#{@settings['omeka_api_root']}/items?key=#{@settings['omeka_api_key']}"
-      response = RestClient.post url, context.output_item.to_json, { content_type: json }
+      response = RestClient.post url, context.omeka_item.to_json, { content_type: json }
     else
       url = "#{@settings['omeka_api_root']}/items/#{item_id}?key=#{@settings['omeka_api_key']}"
-      response = RestClient.put url, context.output_item.to_json, { content_type: json }
+      response = RestClient.put url, context.omeka_item.to_json, { content_type: json }
     end
     if response.code == 200 or response.code == 201
       item_id = JSON.parse(response.body)['id']

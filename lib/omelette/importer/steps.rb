@@ -1,17 +1,15 @@
 class Omelette::Importer
 
   class ToItemTypeStep
-    attr_accessor :item_type_name, :item_type_id, :block, :source_location, :item_type_map
+    attr_accessor :item_type_name, :block, :source_location, :item_type_map
 
-    def initialize(item_type_name, opts, source_location, name_id_maps, &block)
+    def initialize(item_type_name, opts, source_location, &block)
       @item_type_name = item_type_name
       @map_steps = []
       @if_eval = opts[:if] if opts.has_key? :if
       @source_location = source_location
-      @name_id_maps = name_id_maps
       validate!
 
-      @item_type_id = @name_id_maps[:item_types][@item_type_name]
       instance_eval &block
     end
 
@@ -35,21 +33,25 @@ class Omelette::Importer
     end
 
     def execute(context)
-      item = { element_texts: [], item_type: {id: item_type_id}, public: true, featured: false }
+      begin
+        item_type_id = context.mappings[:item_types][@item_type_name]
+      rescue KeyError => ex
+        msg = "Failed to map the item type name: #{@item_type_name} to an identifier. "
+        context.logger.error msg
+        raise ArgumentError.new msg
+      end
+
+      item = { element_texts: [], item_type: { id: item_type_id }, public: true, featured: false }
       @map_steps.each do |map_step|
         break if context.skip?
         context.map_step = map_step
-        result = Omelette::Util.log_mapping_errors context, map_step do
+        values = Omelette::Util.log_mapping_errors context, map_step do
           map_step.execute context
         end
         begin
-          if map_step.is_a? ToElementStep
-            add_elements_to_item(result, item)
-          else
-            add_field_to_item(result, item)
-          end
+          add_to_item(map_step.name, values, item)
         rescue NameError => ex
-          msg = 'Tried to call add_element_to_item with a non-to_element step'
+          msg = 'Tried to call add_to_item with a non-to_element step'
           msg += context.map_step.inspect
           context.logger.error msg
           raise ArgumentError.new msg
@@ -61,7 +63,7 @@ class Omelette::Importer
     end
 
     def to_element(element_name, element_set_name, aLambda = nil, &block)
-      @map_steps << ToElementStep.new(element_name, element_set_name, @name_id_maps[:elements], aLambda, block, Omelette::Util.extract_caller_location(caller.first))
+      @map_steps << ToElementStep.new(element_name, element_set_name,aLambda, block, Omelette::Util.extract_caller_location(caller.first))
     end
 
     def to_field(name, aLambda = nil, &block)
@@ -73,14 +75,14 @@ class Omelette::Importer
 
     end
 
-    def add_elements_to_item(elements, item)
-      return if elements.empty?
-      item[:element_texts].concat elements
-    end
-
-    def add_field_to_item(field, item)
-      return if field.empty?
-      item.merge! field
+    # Only :tag and :element_texts are multi-value fields
+    def add_to_item(name, values, item)
+      name = name.to_sym
+      if name == :tags or name == :element_texts
+        item[name] = item.fetch(name, []).concat values
+      else
+        item[name] = values[-1]
+      end
     end
   end
 
@@ -131,13 +133,9 @@ class Omelette::Importer
   end
 
   class ToFieldStep < LambdaBlockStep
-    def execute(context)
-      accumulator = super(context)
-      accumulator.map { |value| [@name.to_sym, value]}.to_h
-    end
   end
 
-  class ToCollectionStep < ToFieldStep
+  class ToCollectionStep < LambdaBlockStep
     def execute(context)
       accumulator = super(context)
       accumulator.map { |value| { id: value } }
@@ -145,13 +143,13 @@ class Omelette::Importer
   end
 
   class ToElementStep < LambdaBlockStep
-    attr_accessor :element_set_name, :element_id, :element_map
+    attr_accessor :element_set_name, :element_name
 
-    def initialize(element_name, element_set_name, element_map, lambda, block, source_location)
+    def initialize(element_name, element_set_name, lambda, block, source_location)
       @element_set_name = element_set_name
-      super(element_name, lambda, block, source_location)
+      @element_name = element_name
+      super('element_texts', lambda, block, source_location)
       validate!
-      @element_id = element_map[@element_set_name][@name]
     end
 
     def validate!
@@ -170,9 +168,17 @@ class Omelette::Importer
     end
 
     def execute(context)
+      begin
+        element_id = context.mappings[:elements][@element_set_name][@name] rescue nil
+      rescue KeyError => ex
+        msg = "Failed to map the element name: #{@name} and element set: #{@element_set_name} to an identifier. "
+        context.logger.error msg
+        raise ArgumentError.new msg
+      end
+
       accumulator = super(context)
       accumulator.map { |value|
-        { html: false, element: {id: @element_id}, text: value }
+        { html: false, element: {id: element_id}, text: value }
       }
     end
   end

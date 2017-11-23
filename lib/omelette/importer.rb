@@ -71,7 +71,7 @@ class Omelette::Importer
 
   def to_item_type(item_type_name, opts={}, &block)
     source_locaiton = Omelette::Util.extract_caller_location(caller.first)
-    @import_steps << ToItemTypeStep.new(item_type_name, opts, source_locaiton, name_id_maps,&block)
+    @import_steps << ToItemTypeStep.new(item_type_name, opts, source_locaiton, &block)
   end
 
   # def to_element(element_name, element_set_name, aLambda = nil, &block)
@@ -86,9 +86,9 @@ class Omelette::Importer
   # if you want to provide addtional context
   # like position, and/or get back the full context.
   def map_item(item)
-    context = Context.new(source_item: item, settings: settings)
+    context = Context.new(source_item: item, settings: settings, mappings: name_id_maps)
     map_to_context context
-    return context.output_item
+    return context.omeka_item
   end
 
   def map_to_context(context)
@@ -102,7 +102,7 @@ class Omelette::Importer
       end
       # merge the new item to the one in context. Concat the element_texts values, and overwrite
       # any other existing keys
-      context.output_item.merge!(item) { |_k, c, i|
+      context.omeka_item.merge!(item) { |_k, c, i|
         if c.is_a?(Array) and i.is_a?(Array)
           c | i
         elsif c.is_a?(Array)
@@ -144,7 +144,7 @@ class Omelette::Importer
         $stderr.write '.' if count % settings['solr_writer.batch_size'].to_i == 0
       end
 
-      context = Context.new source_item: item, source_item_id: item_id, settings: settings, position: position, logger: logger
+      context = Context.new source_item: item, source_item_id: item_id, settings: settings, position: position, logger: logger, mappings: name_id_maps
 
       if log_batch_size && (count % log_batch_size == 0)
         batch_rps   = log_batch_size / (Time.now - batch_start_time)
