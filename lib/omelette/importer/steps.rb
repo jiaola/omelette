@@ -10,7 +10,7 @@ class Omelette::Importer
       @source_location = source_location
       validate!
 
-      instance_eval &block
+      instance_eval &block if block_given?
     end
 
     def validate!
