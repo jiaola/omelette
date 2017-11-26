@@ -58,12 +58,10 @@ class Omelette::Importer
       self.reverse_merge!(self.class.defaults)
     end
 
-
     def self.defaults
       {
           # Reader defaults
           'reader_class_name' => 'Omelette::XmlReader',
-          'marc_source.type' => 'binary',
 
           # Writer defaults
           'writer_class_name' => 'Omelette::OmekaJsonWriter',
@@ -71,13 +69,7 @@ class Omelette::Importer
 
           # Threading and logging
           'processing_thread_pool' => self.default_processing_thread_pool,
-          'log.batch_size.severity' => 'info',
-
-          # how to post-process the accumulator
-          'allow_nil_values' => false,
-          'allow_duplicate_values' => true,
-
-          'allow_empty_elements' => false
+          'log.batch_size.severity' => 'info'
       }
     end
 
